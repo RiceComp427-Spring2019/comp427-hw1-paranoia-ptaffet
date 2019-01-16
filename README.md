@@ -28,7 +28,7 @@ please cut-and-paste the text from that email here._
   - The document management system is either provided by a large, decently reputable software company or is a well-known, reputable open source project.
   This doesn't mean that it won't have bugs, only that bugs will eventually be fixed.
   - Our documents are important enough that we may be targeted by fairly sophisticated adversaries.
-  We may ocassionally be attacked with zero-day exploits (i.e. those that target previously unknown vulnerabilities).
+  We may occasionally be attacked with zero-day exploits (i.e. those that target previously unknown vulnerabilities).
   - Users connect to the document management system via some HTTPS-based protocol.
 - Assets:
   - The confidential information contained inside certain documents: This is the primary asset to protect in this scenario, but we need to protect assets that help in protecting this information.
@@ -60,7 +60,7 @@ please cut-and-paste the text from that email here._
   Since physical access to servers is pretty infrequent, the cost of this seems reasonable.
   This countermeasure could be taken one step further by requiring multiple admins to be present, but that extra cost seems excessive.
   - To avoid compromise of administrator credentials or user credentials, passwords should be required to meet a complexity policy.
-  It needs to ensure passwords are essentially unguessable but not so complicated that they are impossible to remember.
+  It needs to ensure passwords are essentially un-guessable but not so complicated that they are impossible to remember.
   - A countermeasure to mitigate against insider leak attacks is to carefully control permission to access documents on a per-user basis and log all accesses to confidential documents.
   The policy for granting access to documents needs to be made as painless as possible (e.g. when a lawyer is assigned to a project, the person who sets the assignment automatically gives them access to the relevant documents).
   The cost of logging accesses is minimal and provides a good deterrence against leakers.
@@ -86,13 +86,29 @@ please cut-and-paste the text from that email here._
   - explanatory_paragraph ...
 
 ## Problem 3
-- Scenario: Your choice (give a brief explanation)
+- Scenario: My car doesn't have a remote to unlock the doors, so I'm building a device that can press the unlock button on the passenger side door when it receives a command from my phone over Bluetooth.
+I'm currently using a challenge-response protocol like this:
+1. The phone initiates a Bluetooth connection to the microcontroller.
+1. The microcontroller responds with a random nonce.
+1. The phone computes HMAC(_k_, nonce) and sends it back along with the command.
+1. The microcontroller also computes HMAC(_k_, nonce). If it matches what the phone supplied, it executes the command.
 - Assumptions:
-  - explain_your_assumptions
+  - My phone and the microcontroller in the car are not compromised.
+  - If it's substantially easier for an attacker to break into my car by smashing the window, they won't bother with attacking the remote unlocker.
+  - The attacker cannot hotwire my car, so the value of what they get by breaking in is just the value of what I keep in my car, which is less than $2000. 
+  - The attacker won't attempt to break into my car while I'm at my car.
+  - It's important for the protocol to be low-power for the microcontroller, since it is battery-powered.
+  - The key _k_ is shared between the phone and microcontroller but is otherwise secret. 
 - Assets:
-  - explanatory_paragraph
-  - explanatory_paragraph ...
+  - Whatever I'm storing in my car, which may include my laptop or luggage
+  - Other things they can take from the car itself, e.g. the sound system
+  - My phone, which contains the code and encryption keys
+  - The secret key _k_
+  - The microcontroller itself
 - Threats:
+  - MITM
+  - Break window
+  - 
   - explanatory_paragraph 
   - explanatory_paragraph ...
 - Countermeasures:
