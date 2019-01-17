@@ -72,18 +72,41 @@ please cut-and-paste the text from that email here._
   This protects against some types of compromise of users' computers.
 
 ## Problem 2
-- Scenario: {Stadium|TSA|Documents|Grading|G20}
+- Scenario: Grading
 - Assumptions:
-  - explain_your_assumptions
+  - Students submit code electronically
+  - The grade is based entirely on how whether its output matches that of a reference solution on a series of test cases
+  - The source is compiled by the grading program using a student-supplied Makefile
+  - The students are particularly malicious and won't necessarily follow instructions about where to write on the file system, etc.
+  - I'm not considering the challenge of identifying plagiarism in submitted code.
 - Assets:
-  - explanatory_paragraph
-  - explanatory_paragraph ...
+  - The gradebook
+  - The test cases and their solutions
+  - Student's submissions
+  - The grading infrastructure
+  - My credentials for accessing the grading infrastructure
 - Threats:
-  - explanatory_paragraph 
-  - explanatory_paragraph ...
+  - The following threats come from the fact that I'm essentially running code provided by a potentially malicious actor, which is a dangerous strategy:
+	  - The student's submission reads and somehow publishes the test cases, compromising the project for next year
+	  - The student's submission reads the files containing the correct solution and outputs their contents instead of computing the solution
+	  - The student's submission overwrites files on the grading computer
+	  - The student's submission never terminates and consumes lots of CPU or memory (e.g. they just submit a Bitcoin miner).
+  - A student could try to steal another student's solution
 - Countermeasures:
-  - explanatory_paragraph
-  - explanatory_paragraph ...
+  - Grading should be done on a different machine than the one that stores the gradebook.
+  - Compiling and running the student's code should be done in a very unprivileged user account (the running account).
+  Since it typically should be very obvious to the professor what types of permissions (disk, network, etc.),
+  these restrictions pose a very small cost to valid submissions.
+	  - The running account should not have network access or should have network access restricted to allowed IP addresses.
+	  - The running account should not have access to the solution files.
+	  - The running account should only have write access to a very small subset of the file system.
+  - The grading process should monitor the compilation and execution processes and terminate them after a reasonable time-out limit expires.
+  As long as the time-out is reasonable, I think students will understand the justification for this policy.
+  - The grading machine should only allow access via the my SSH keys, which are protected with a password.
+  This makes it very difficult for a student to log into the grading infrastructure.
+  The downside is that I can only log in from computers I set up in advance, meaning I'm locked out if they all break,
+  but as long as I have at least two computers, I'm willing to accept this. 
+  - Students' submissions should be timed, and any submission that runs substantially faster than should be possible should be flagged to manual review.
 
 ## Problem 3
 - Scenario: My car doesn't have a remote to unlock the doors, so I'm building a device that can press the unlock button on the passenger side door when it receives a command from my phone over Bluetooth.
