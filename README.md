@@ -94,6 +94,7 @@ please cut-and-paste the text from that email here._
   - A student could try to steal another student's solution
 - Countermeasures:
   - Grading should be done on a different machine than the one that stores the gradebook.
+  This probably means I need a dedicated grading machine, but I wouldn't want to do all this on my personal machine anyways, which is where I store the gradebook.
   - Compiling and running the student's code should be done in a very unprivileged user account (the running account).
   Since it typically should be very obvious to the professor what types of permissions (disk, network, etc.),
   these restrictions pose a very small cost to valid submissions.
