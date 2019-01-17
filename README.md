@@ -88,10 +88,10 @@ please cut-and-paste the text from that email here._
 ## Problem 3
 - Scenario: My car doesn't have a remote to unlock the doors, so I'm building a device that can press the unlock button on the passenger side door when it receives a command from my phone over Bluetooth.
 I'm currently using a challenge-response protocol like this:
-1. The phone initiates a Bluetooth connection to the microcontroller.
+1. When the phone detects that it is in range of the microcontroller, it initiates a Bluetooth connection to the microcontroller.
 1. The microcontroller responds with a random nonce.
-1. The phone computes HMAC(_k_, nonce) and sends it back along with the command.
-1. The microcontroller also computes HMAC(_k_, nonce). If it matches what the phone supplied, it executes the command.
+1. The phone computes HMAC(_k_, nonce || command) and sends it back along with the command.
+1. The microcontroller also computes HMAC(_k_, nonce || command). If it matches what the phone supplied, it executes the command.
 - Assumptions:
   - My phone and the microcontroller in the car are not compromised.
   - If it's substantially easier for an attacker to break into my car by smashing the window, they won't bother with attacking the remote unlocker.
@@ -99,6 +99,7 @@ I'm currently using a challenge-response protocol like this:
   - The attacker won't attempt to break into my car while I'm at my car.
   - It's important for the protocol to be low-power for the microcontroller, since it is battery-powered.
   - The key _k_ is shared between the phone and microcontroller but is otherwise secret. 
+  - The random number generator for the nonce is good.
 - Assets:
   - Whatever I'm storing in my car, which may include my laptop or luggage
   - Other things they can take from the car itself, e.g. the sound system
@@ -106,12 +107,21 @@ I'm currently using a challenge-response protocol like this:
   - The secret key _k_
   - The microcontroller itself
 - Threats:
-  - MITM
-  - Break window
-  - 
-  - explanatory_paragraph 
-  - explanatory_paragraph ...
+  - An attacker with a Bluetooth sniffer could record connection attempts and replay them.
+  - An attacker could perform a man-in-the-middle attack, having one device pretend to be the microcontroller to my phone and another device pretend to be my phone to the microcontroller.
+  - An attacker could break my car's window and press the unlock button
+  - An attacker could steal my phone and use it to unlock the car
 - Countermeasures:
-  - explanatory_paragraph
-  - explanatory_paragraph ...
+  - Realistically, I can't justify many countermeasures, since I expect most attackers would just go for the window.
+  I'm not willing to pay a large price in power consumption for a more sophisticated protocol.
+  - The protocol itself defends against replay attacks by using the nonce.
+  If the phone just sent the key in plaintext and an attacker sniffed it, they could lock and unlock my car as much as they wanted without leaving a trace.
+  - The easiest way to defend against practical man-in-the-middle attacks is to require user input on my phone to unlock the car.
+  This wouldn't eliminate man-in-the-middle attacks, but it would only make them possible when I press the button, which is when I'm near my car.
+  I don't think the cost of pulling out my phone, opening the app, and pressing a button is worth it to defend against this.
+  Instead, I plan to have the phone app send a toast notification whenever it sends an unlock message.
+  Although when I see the message, it is too late to stop the attack, at least I can be aware if it is happening.
+  - I don't know much about countermeasures to avoid having my window broken.
+  I suppose the common sense one is not to leave valuable-looking objects in plain sight.
+  - I very rarely allow my phone out of my sight except in secure places like my apartment.
 
